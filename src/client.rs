@@ -41,7 +41,7 @@ impl SearXNGClient {
     ///
     /// # Arguments
     ///
-    /// * `base_url` - The base URL of the SearXNG instance (e.g., "https://searx.be").
+    /// * `base_url` - The base URL of the SearXNG instance (e.g., "<https://searx.be>").
     /// * `format` - The desired [`ResponseFormat`].
     ///
     /// # Examples

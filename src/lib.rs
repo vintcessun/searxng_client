@@ -6,8 +6,8 @@
 //! handling the dynamic nature of SearXNG results through robust serialization
 //! and a convenient builder pattern.
 
-mod client;
-mod response;
+pub mod client;
+pub mod response;
 #[cfg(test)]
 mod test;
 
