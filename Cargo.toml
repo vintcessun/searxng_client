@@ -2,6 +2,11 @@
 name = "searxng-client"
 version = "0.1.0"
 edition = "2024"
+authors = ["vintcessun"]
+license = "MIT"
+description = "A high-performance, type-safe asynchronous SearXNG API client for Rust."
+repository = "https://github.com/vintcessun/searxng_client"
+readme = "README.md"
 
 [dependencies]
 async-trait = "0.1.89"
