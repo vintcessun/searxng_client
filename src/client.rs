@@ -148,6 +148,7 @@ impl<'a> SearchBuilder<'a> {
     ///
     /// ```no_run
     /// # use searxng_client::{SearXNGClient, ResponseFormat};
+    /// # #[cfg(test)]
     /// # tokio_test::block_on(async {
     /// # let client = SearXNGClient::new("https://searx.be", ResponseFormat::Json);
     /// let response = client.search("rust").send().await?;
@@ -194,12 +195,17 @@ impl<'a> SearchBuilder<'a> {
     pub async fn send_get_num(mut self, num: usize) -> Result<Vec<SearchResult>, reqwest::Error> {
         let mut pageno = 1;
         let mut ret = Vec::with_capacity(num + 50);
+        let mut retries = 3u8;
         while ret.len() < num {
             self.params.pageno = Some(pageno);
             match self.send_empty_check_retry().await {
                 Ok(Some(results)) => ret.extend(results),
                 Ok(None) => break,
-                Err(_) => continue, // Retry on error
+                Err(_) if retries > 0 => { // retry on error
+                    retries -= 1;
+                    continue
+                },
+                Err(e) => Err(e)?, // unless ran out
             }
             pageno += 1;
         }
