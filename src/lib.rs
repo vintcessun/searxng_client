@@ -18,12 +18,26 @@ pub use response::SearchResponse;
 mod tests {
     use super::*;
 
+    fn test_client() -> SearXNGClient {
+        let url =
+            std::env::var("SEARXNG_URL").unwrap_or_else(|_| "http://localhost:8089/".to_string());
+        println!("url: {url}");
+        SearXNGClient::new(&url, ResponseFormat::Json)
+    }
+
     #[tokio::test]
     async fn test_search() -> anyhow::Result<()> {
-        let client = SearXNGClient::new("http://localhost:8089/", ResponseFormat::Json);
-        let response = client.search("rust programming").send().await?;
+        let response = test_client().search("rust programming").send().await?;
         println!("{:?}", response);
-        let results = client.search("rust programming").send_get_num(10).await?;
+        Ok(())
+    }
+
+    #[tokio::test]
+    async fn test_search_get_num() -> anyhow::Result<()> {
+        let results = test_client()
+            .search("rust programming")
+            .send_get_num(10)
+            .await?;
         println!("{:?}", results);
         Ok(())
     }

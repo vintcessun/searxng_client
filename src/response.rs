@@ -56,7 +56,7 @@ pub struct MainSearchResult {
     pub img_src: String,
     pub iframe_src: String,
     pub audio_src: String,
-    pub thumbnail: String,
+    pub thumbnail: Option<String>,
     #[serde(rename = "publishedDate")]
     pub published_date: Option<NaiveDateTime>,
     #[deprecated(
@@ -100,7 +100,7 @@ pub struct LegacySearchResult {
     pub title: String,
     pub content: String,
     pub img_src: String,
-    pub thumbnail: String,
+    pub thumbnail: Option<String>,
     pub priority: PriorityType,
     pub engines: SmallVec<[String; 4]>,
     pub positions: SmallVec<[i32; 4]>,
@@ -171,5 +171,17 @@ impl From<(String, String)> for EngineError {
             engine: tuple.0,
             error_msg: tuple.1,
         }
+    }
+}
+
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    #[test]
+    fn null_thumbnail() {
+        let json = include_str!("../test_data/failedResponse_20260328.json");
+        let response = serde_json::from_str::<SearchResponse>(json).unwrap();
+        assert_eq!(response.query, "rust programming");
     }
 }
